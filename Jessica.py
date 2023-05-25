@@ -2,13 +2,13 @@ import telegram.ext
 
 TOKEN="5870357601:AAGySmIthzxWxlJ5qHj2TPp3Raun7n-wPRk"
 
-updater=telegram.ext.updater(TOKEN,use_context=True)
+updater=telegram.ext.Updater(TOKEN,use_context=True)
 dispatcher=updater.dispacher
 
 def start(update,context):
     update.message.reply_text("Welcome!")
 
-def help(upadte,context):
+def help(update,context):
     update.message.reply_text(
         """
         /start -> starts the bot
