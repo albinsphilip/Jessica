@@ -2,7 +2,7 @@ import telegram.ext
 
 TOKEN="5870357601:AAGySmIthzxWxlJ5qHj2TPp3Raun7n-wPRk"
 
-updater=telegram.ext.Updater(TOKEN,use_context=True)
+updater=telegram.ext.Updater(TOKEN)
 dispatcher=updater.dispacher
 
 def start(update,context):
