@@ -1,48 +1,44 @@
-import telegram.ext
+import requests
+import json
 
-TOKEN="5870357601:AAGySmIthzxWxlJ5qHj2TPp3Raun7n-wPRk"
+TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
 
-updater=telegram.ext.Updater(TOKEN)
-dispatcher=updater.dispacher
+def send_message(chat_id, text):
+    url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+    data = {'chat_id': chat_id, 'text': text}
+    response = requests.post(url, json=data)
+    return response.json()
 
-def start(update,context):
-    update.message.reply_text("Welcome!")
+def handle_command(message):
+    chat_id = message['chat']['id']
+    command = message['text'].lower()
 
-def help(update,context):
-    update.message.reply_text(
-        """
-        /start -> starts the bot
-        /help -> this message
-        /upload -> uploads the specified document
-        /download -> downloads the file with specified ID
-        /playlist -> provides links to specified subject's YouTube playlists
-        /contact -> provides the bot creator's contact details
-        """
-        )
+    if command == '/start':
+        send_message(chat_id, 'Hello! How can I assist you?')
+    elif command == '/help':
+        send_message(chat_id, 'I can help you with various commands.')
+    elif command == '/about':
+        send_message(chat_id, 'I am a Telegram bot designed to assist users.')
+    else:
+        send_message(chat_id, 'Sorry, I didn\'t understand that command.')
 
-def content(update,content):
-    update.message.reply_text("SAMPLE TEXT")
+def get_updates(offset=None):
+    url = f'https://api.telegram.org/bot{TOKEN}/getUpdates'
+    params = {'offset': offset, 'timeout': 60}
+    response = requests.get(url, params=params)
+    return response.json()
 
-def upload():
-    pass
+def main():
+    last_update_id = 0
 
-def download():
-    pass
+    while True:
+        updates = get_updates(offset=last_update_id)
 
-def playlist():
-    pass
+        if 'result' in updates and updates['result']:
+            for update in updates['result']:
+                if 'message' in update:
+                    handle_command(update['message'])
+                    last_update_id = update['update_id'] + 1
 
-def contact():
-    update.message.reply_text("Bot creator's telegram username:@albin_s_philip")
-
-dispatcher.add_handler(telegram.ext.CommandHandler("start",start))
-dispatcher.add_handler(telegram.ext.CommandHandler("help",help))
-dispatcher.add_handler(telegram.ext.CommandHandler("upload",upload))
-dispatcher.add_handler(telegram.ext.CommandHandler("download",download))
-dispatcher.add_handler(telegram.ext.CommandHandler("playlist",playlist))
-dispatcher.add_handler(telegram.ext.CommandHandler("contact",contact))
-
-updater.start_polling()
-updater.idle()
-
-
+if __name__ == '__main__':
+    main()
