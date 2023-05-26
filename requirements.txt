@@ -1,2 +1,2 @@
-telegram
-python-telegram-bot==13.3
+requests==2.26.0
+json
