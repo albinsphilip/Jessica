@@ -1,9 +1,11 @@
+pip install python-dotenv
 import requests
 import json
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
+TOKEN=os.getenv('TOKEN')
 
 def send_message(chat_id, text):
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
